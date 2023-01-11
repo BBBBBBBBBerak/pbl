@@ -13,5 +13,5 @@ if (miBT.available()){     	// si hay informacion disponible desde modulo
    Serial.write(miBT.read());} 	// lee Bluetooth y envia a monitor serial de Arduino
 
 if (Serial.available()){   	// si hay informacion disponible desde el monitor serial
-   miBT.write(Serial.read());} 	// lee monitor serial y envia a Bluetooth
+     (Serial.read());} 	// lee monitor serial y envia a Bluetooth
 }
