@@ -19,7 +19,7 @@ void loop() {
   miBT.print(GPS());
   Serial.println(GPS());
 
-  delay(1000);
+  delay(300);
 } 
 
 String GPS(){
