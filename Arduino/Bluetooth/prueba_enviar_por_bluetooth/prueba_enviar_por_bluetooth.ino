@@ -10,5 +10,6 @@ void setup(){
 }
 
 void loop(){
- miBT.write("Bengoa");
+ miBT.print("15678i902495,3492345677,");
+ delay(1000);
 }
