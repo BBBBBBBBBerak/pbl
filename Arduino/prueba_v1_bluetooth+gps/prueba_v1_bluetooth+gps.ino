@@ -37,8 +37,8 @@ String GPS(){
       }
    }
  
-   if (newData)
-    {
+   //if (newData)
+    //{
       float flat, flon;   //Variables de latitud y longitud
       unsigned long age;
       gps.f_get_position(&flat, &flon, &age);
@@ -46,12 +46,12 @@ String GPS(){
       //Guardamos en el String todos los dato_gps
       dato_gps=(
       String(flat == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flat, 6) + String(" ,  ") + //Latitud
-      String(flon == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flon, 6) +  String(" ,  "));} //Longitud)
-      
-     else
-       {
-          dato_gps = String("---") + String(" ,  ") + String("---") + String(" ,  ");
-          }
+      String(flon == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flon, 6) +  String(" ,  ")); //Longitud)
+//}
+     //else
+       //{
+          //dato_gps = String("---") + String(" ,  ") + String("---") + String(" ,  ");
+          //}
    
  return dato_gps;
 }
