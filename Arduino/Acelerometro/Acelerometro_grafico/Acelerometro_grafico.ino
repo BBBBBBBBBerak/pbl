@@ -75,35 +75,6 @@ void loop() {
   Serial.print("Mod:");
   Serial.print(Mod);
   
-  /* Get the orientation of the sensor */
-  /*uint8_t o = mma.getOrientation();
-  
-  switch (o) {
-    case MMA8451_PL_PUF: 
-      Serial.println("Portrait Up Front");
-      break;
-    case MMA8451_PL_PUB: 
-      Serial.println("Portrait Up Back");
-      break;    
-    case MMA8451_PL_PDF: 
-      Serial.println("Portrait Down Front");
-      break;
-    case MMA8451_PL_PDB: 
-      Serial.println("Portrait Down Back");
-      break;
-    case MMA8451_PL_LRF: 
-      Serial.println("Landscape Right Front");
-      break;
-    case MMA8451_PL_LRB: 
-      Serial.println("Landscape Right Back");
-      break;
-    case MMA8451_PL_LLF: 
-      Serial.println("Landscape Left Front");
-      break;
-    case MMA8451_PL_LLB: 
-      Serial.println("Landscape Left Back");
-      break;
-    }*/
   Serial.println();
   delay(50);
   
