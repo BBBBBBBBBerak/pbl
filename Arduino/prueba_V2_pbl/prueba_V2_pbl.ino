@@ -19,10 +19,12 @@
 
 
 const int ledPin = 7;// the number of the LED pin
+const int pulsador = 8;//input pullup del pulsador
 int ledState = LOW; // ledState used to set the LED
 unsigned long previousMillis = 0; // will store last time LED was updated
 unsigned long currentMillis = 0; // will store current time LED
-int estado = 0;
+int estado = 2;
+int BUZZERSTATE = 0;
 
 
 Adafruit_MMA8451 mma = Adafruit_MMA8451();
@@ -36,6 +38,7 @@ String dato_gps;
 
 void setup() {
   pinMode(ledPin, OUTPUT);
+  pinMode(pulsador, INPUT_PULLUP);
   Serial.begin(9600);  
   miBT.begin(38400);		// comunicacion serie entre Arduino y el modulo a 38400 bps
   Serial1.begin(9600);
@@ -54,65 +57,76 @@ void setup() {
 
 void loop() {  
   digitalWrite(ledPin, LOW);
-  noTone(6);
+  //noTone(6);
   miBT.print(GPS());  
   Serial.print("GPS -->");
   Serial.println(GPS());
   Serial.print("ACELEROMETRO -->");
   Serial.println(aceleracion());
 
-  if(miBT.available()>0){
+  if(miBT.available() > 0 || !digitalRead(pulsador)){
     estado = 2;
   }
 
   switch (estado){
   case 1:
     digitalWrite(ledPin, LOW);
-    noTone(6);
-  if(miBT.available()>0){
-    estado = 2;
-  }    
+    noTone(6); 
   break;
   case 2:
-    digitalWrite(ledPin, HIGH);
-    noTone(6);
     currentMillis = millis(); //take the current time
-    if (currentMillis - previousMillis >= 1000 && ledState==LOW) {
-      digitalWrite(ledPin, HIGH);
-      tone(6,500);    
-      previousMillis = currentMillis;
-    }
-  break;
-}
+    if (currentMillis - previousMillis >= 1000) {
+    // save the last time you blinked the BUZZER
+    previousMillis = currentMillis;
 
+    // if the BUZZER is off turn it on and vice-versa:
+    if (BUZZERSTATE == LOW) {
+      BUZZERSTATE = HIGH;
+      tone(6, 200, 1000);
+      ledState = HIGH;
+    } else {
+      BUZZERSTATE = LOW;
+      noTone(6);
+      ledState = LOW;
+    }
   
 
-  //delay(1000);
-} 
+    // set the LED with the ledState of the variable:
+    digitalWrite(ledPin, ledState);
+    }
+    /*if (currentMillis - previousMillis >= 1000 && ledState==LOW) {
+      digitalWrite(ledPin, HIGH);
+      tone(6, 500);
+      previousMillis = currentMillis;
+    }
+    else{
+    digitalWrite(ledPin, LOW);
+    noTone(6);
+    }*/
+    if(miBT.available() > 0 || !digitalRead(pulsador)){
+    estado = 2;
+  }
+  break;
+  }
+}
 
-String GPS(){
-   
-   bool newData = false;  //Funcion para saber si hay dato_gpss
-   
+String GPS(){   
    // Intentar recibir secuencia durante un segundo
-   for (unsigned long start = millis(); millis() - start < 1000;)
+   //for (unsigned long start = millis(); millis() - start < 1000;)
    {
       while (Serial1.available())
       {
          char c = Serial1.read();  //Guarda dentro de c los valores que de el GPS
-         if (gps.encode(c))  //Descodifica la nueva secuencia recibida
-            newData = true;
       }
    }
  
-      float flat, flon;   //Variables de latitud y longitud
-      unsigned long age;
-      gps.f_get_position(&flat, &flon, &age);
-
-      //Guardamos en el String todos los dato_gps
-      dato_gps=(
-      String(flat == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flat, 6) + String(" ,  ") + //Latitud
-      String(flon == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flon, 6) +  String(" ,  ")); //Longitud
+    float flat, flon;   //Variables de latitud y longitud
+    unsigned long age;
+    gps.f_get_position(&flat, &flon, &age);
+    //Guardamos en el String todos los dato_gps
+    dato_gps=(
+    String(flat == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flat, 6) + String(" ,  ") + //Latitud
+    String(flon == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flon, 6) +  String(" ,  ")); //Longitud
          
  return dato_gps;
 }
