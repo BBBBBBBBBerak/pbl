@@ -35,7 +35,7 @@ SoftwareSerial Serial1(4, 3); //Asignar el puerto a los pines(Al GPS)
 
 TinyGPS gps;
 String dato_gps;
-
+String datoGPS;
 void setup() {
   pinMode(ledPin, OUTPUT);
   pinMode(pulsador, INPUT_PULLUP);
@@ -56,6 +56,8 @@ void setup() {
 }
 
 void loop() {  
+  datoGPS = GPS();
+  //Serial.println("GPS!");
   digitalWrite(ledPin, LOW);
   //noTone(6);
   //miBT.print(GPS());  
@@ -78,7 +80,7 @@ void loop() {
   case 2:
     if(contador == 0){
 
-      miBT.print(GPS());
+      miBT.print(datoGPS);
       contador++;
     }
     currentMillis = millis(); //take the current time
