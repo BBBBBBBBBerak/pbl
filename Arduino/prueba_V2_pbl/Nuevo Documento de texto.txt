@@ -1,0 +1,65 @@
+/*
+ * LED Blink with millis() with different time interval of ON and OFF time
+ * Written by Ahmad Shamshiri for Robojax.com and Robojax YouTube channel
+ * written on Aug 05, 2019 in Ajax, Ontario, Canada at 12:41
+ * Watch video instruction:https://youtu.be/rUtDfadf8Jk
+ * Watch introduction video to millis(): https://youtu.be/u2HsiTS8niQ
+ 
+Get this code and other Arduino codes from Robojax.com
+Learn Arduino step by step in structured course with all material, wiring diagram and library
+all in once place. Purchase My course on Udemy.com http://robojax.com/L/?id=62
+
+If you found this tutorial helpful, please support me so I can continue creating 
+content like this. You can support me on Patreon http://robojax.com/L/?id=63
+
+or make donation using PayPal http://robojax.com/L/?id=64
+
+ *  * This code is "AS IS" without warranty or liability. Free to be used as long as you keep this note intact.* 
+ * This code has been download from Robojax.com
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+const int LEDpin = 3;
+const long onDuration = 100;// OFF time for LED
+const long offDuration = 500;// ON time for LED
+int LEDState =HIGH;// initial state of LED
+
+long rememberTime=0;// this is used by the code
+
+void setup() {
+  pinMode(LEDpin,OUTPUT);// define LEDpin as output
+  digitalWrite(LEDpin,LEDState);// set initial state
+}
+
+void loop() {
+  // Robojax LED blink with millis()
+
+ if( LEDState ==HIGH )
+ {
+    if( (millis()- rememberTime) >= onDuration){   
+    LEDState = LOW;// change the state of LED
+    rememberTime=millis();// remember Current millis() time
+    }
+ }
+ else
+ {   
+    if( (millis()- rememberTime) >= offDuration){     
+    LEDState =HIGH;// change the state of LED
+    rememberTime=millis();// remember Current millis() time
+    }
+ }
+
+ // Robojax LED blink with millis()
+ digitalWrite(LEDpin,LEDState);// turn the LED ON or OFF
+
+}// loop ends 
