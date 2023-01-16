@@ -82,16 +82,14 @@ void loop() {
     // if the BUZZER is off turn it on and vice-versa:
     if (BUZZERSTATE == LOW) {
       BUZZERSTATE = HIGH;
-      tone(6, 200, 1000);
+      tone(6, 500, 1000);
       ledState = HIGH;
-    } else {
+      } 
+      else {
       BUZZERSTATE = LOW;
       noTone(6);
       ledState = LOW;
-    }
-  
-
-    // set the LED with the ledState of the variable:
+      }
     digitalWrite(ledPin, ledState);
     }
     /*if (currentMillis - previousMillis >= 1000 && ledState==LOW) {
