@@ -57,6 +57,7 @@ void setup() {
 
 void loop() {  
   datoGPS = GPS();
+  aceleracion();
   //Serial.println("GPS!");
   digitalWrite(ledPin, LOW);
   //noTone(6);
@@ -66,8 +67,9 @@ void loop() {
   //Serial.print("ACELEROMETRO -->");
   //Serial.println(aceleracion());
 
-  if(miBT.available() > 0 || digitalRead(pulsador)== LOW){
-    Serial.println("Pulsador pulsado");
+
+
+  if(aceleracion() > 17){
     estado = 2;
   }
 
@@ -79,10 +81,15 @@ void loop() {
 
   case 2:
     if(contador == 0){
-
       miBT.print(datoGPS);
       contador++;
     }
+
+    if(miBT.available() > 0 || digitalRead(pulsador)== LOW){
+    Serial.println("Pulsador pulsado");
+    estado = 2;
+    }
+
     currentMillis = millis(); //take the current time
     if (currentMillis - previousMillis >= 1000) {
     // save the last time you blinked the BUZZER
@@ -91,31 +98,21 @@ void loop() {
     // if the BUZZER is off turn it on and vice-versa:
     if (BUZZERSTATE == LOW) {
       BUZZERSTATE = HIGH;
-      tone(6, 200, 1000);
+      tone(6, 500, 1000);
       ledState = HIGH;
-    } else {
+      } 
+      else {
       BUZZERSTATE = LOW;
       noTone(6);
       ledState = LOW;
     }
-      // set the LED with the ledState of the variable:
-    digitalWrite(ledPin, HIGH);
-    }
-    /*if (currentMillis - previousMillis >= 1000 && ledState==LOW) {
-      digitalWrite(ledPin, HIGH);
-      tone(6, 500);
-      previousMillis = currentMillis;
-    }
-    else{
-    digitalWrite(ledPin, LOW);
-    noTone(6);
-    }*/
+    
     if(miBT.available() > 0 || !digitalRead(pulsador)){
     estado = 2;
   }
   break;
   }
-}
+  }
 
 String GPS(){   
    // Intentar recibir secuencia durante un segundo
