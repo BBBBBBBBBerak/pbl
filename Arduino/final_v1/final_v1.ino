@@ -6,8 +6,7 @@
 *          Jokin Bengoa,                *
 *          Ander Beracoechea.           *
 *                                       *
-* Name: Prueba_v1_pbl                   * 
-*                                       *
+* Name: final_v1                        * 
 *                                       *
 *--------------------------------------*/
 
@@ -38,7 +37,7 @@ String dato_gps;
 String datoGPS;
 float dato_aceleracion = 9.8;
 int estado_led = LOW;
-
+int i = 0;
 void setup() {
   pinMode(ledPin, OUTPUT);
   pinMode(pulsador, INPUT_PULLUP);
@@ -67,6 +66,8 @@ void loop() {
   }
   switch (estado){
   case 1:
+    Serial.println(i);
+    i = 0;
     digitalWrite(ledPin, LOW);
     Serial.println("Caso 1");
     estado_led = LOW;
@@ -81,22 +82,22 @@ void loop() {
   break;
 
   case 2:
+  Serial.println(i);
+  GPS();
+  aceleracion();
     //Serial.println("Caso 2");
 //    digitalWrite(ledPin, estado_led);
-    estado_led = !estado_led;
-    if(contador == 0){
-      miBT.print(datoGPS);
-      contador++;
-    }
+
     currentMillis = millis(); //take the current time
     if (currentMillis - previousMillis >= 1000) { // save the last time you blinked the BUZZER
-
+    
     // if the BUZZER is off turn it on and vice-versa:
     if (BUZZERSTATE == LOW) {
       BUZZERSTATE = HIGH;
       digitalWrite(ledPin, HIGH);
       estado_led = !estado_led;
-      tone(6, 500);
+      tone(6, 4000);
+        i++;
       } 
       
       else {
@@ -106,7 +107,14 @@ void loop() {
     }
     previousMillis = currentMillis;
     }
+
+    if (i == 10){
+      if(contador == 0){
+        miBT.print(datoGPS);
+        contador++;}
+        }
     
+
     if(miBT.available() > 0 || digitalRead(pulsador)== LOW){
     estado = 1;
     }
