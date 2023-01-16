@@ -6,7 +6,7 @@
 *          Jokin Bengoa,                *
 *          Ander Beracoechea.           *
 *                                       *
-* Name: Prueba_v1_pbl                   *
+* Name: Prueba_v1_pbl                   * 
 *                                       *
 *                                       *
 *--------------------------------------*/
@@ -23,8 +23,9 @@ const int pulsador = 8;//input pullup del pulsador
 int ledState = LOW; // ledState used to set the LED
 unsigned long previousMillis = 0; // will store last time LED was updated
 unsigned long currentMillis = 0; // will store current time LED
-int estado = 2;
+int estado = 0;
 int BUZZERSTATE = 0;
+int contador = 0;
 
 
 Adafruit_MMA8451 mma = Adafruit_MMA8451();
@@ -35,13 +36,12 @@ SoftwareSerial Serial1(4, 3); //Asignar el puerto a los pines(Al GPS)
 TinyGPS gps;
 String dato_gps;
 
-
 void setup() {
   pinMode(ledPin, OUTPUT);
   pinMode(pulsador, INPUT_PULLUP);
-  Serial.begin(9600);  
+  Serial.begin(9600);   // Serial pc arduino
   miBT.begin(38400);		// comunicacion serie entre Arduino y el modulo a 38400 bps
-  Serial1.begin(9600);
+  Serial1.begin(9600);  // GPS
 
   Serial.println("Adafruit MMA8451 test!");
 
@@ -58,13 +58,14 @@ void setup() {
 void loop() {  
   digitalWrite(ledPin, LOW);
   //noTone(6);
-  miBT.print(GPS());  
-  Serial.print("GPS -->");
-  Serial.println(GPS());
-  Serial.print("ACELEROMETRO -->");
-  Serial.println(aceleracion());
+  //miBT.print(GPS());  
+  //Serial.print("GPS -->");
+  //Serial.println(GPS());
+  //Serial.print("ACELEROMETRO -->");
+  //Serial.println(aceleracion());
 
-  if(miBT.available() > 0 || !digitalRead(pulsador)){
+  if(miBT.available() > 0 || digitalRead(pulsador)== LOW){
+    Serial.println("Pulsador pulsado");
     estado = 2;
   }
 
@@ -73,7 +74,13 @@ void loop() {
     digitalWrite(ledPin, LOW);
     noTone(6); 
   break;
+
   case 2:
+    if(contador == 0){
+
+      miBT.print(GPS());
+      contador++;
+    }
     currentMillis = millis(); //take the current time
     if (currentMillis - previousMillis >= 1000) {
     // save the last time you blinked the BUZZER
@@ -89,10 +96,8 @@ void loop() {
       noTone(6);
       ledState = LOW;
     }
-  
-
-    // set the LED with the ledState of the variable:
-    digitalWrite(ledPin, ledState);
+      // set the LED with the ledState of the variable:
+    digitalWrite(ledPin, HIGH);
     }
     /*if (currentMillis - previousMillis >= 1000 && ledState==LOW) {
       digitalWrite(ledPin, HIGH);
