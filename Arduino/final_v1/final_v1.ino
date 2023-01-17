@@ -84,7 +84,7 @@ void loop() {
   case 2:
   Serial.println(i);
   GPS();
-  aceleracion();
+ // aceleracion();
     //Serial.println("Caso 2");
 //    digitalWrite(ledPin, estado_led);
 
@@ -111,9 +111,9 @@ void loop() {
     if (i == 10){
       if(contador == 0){
         miBT.print(datoGPS);
-        contador++;}
-        }
-    
+        contador++;
+      }
+    }
 
     if(miBT.available() > 0 || digitalRead(pulsador)== LOW){
     estado = 1;
