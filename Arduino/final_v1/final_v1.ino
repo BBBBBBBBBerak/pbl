@@ -113,6 +113,7 @@ void loop() {
         miBT.println(datoGPS);
         Serial.println(datoGPS);
         contador++;
+        i = 0;
       }
     }
 
