@@ -21,7 +21,9 @@ const int ledPin = 7;// the number of the LED pin
 const int pulsador = 8;//input pullup del pulsador
 int ledState = LOW; // ledState used to set the LED
 unsigned long previousMillis = 0;
-unsigned long previousMillisA = 0; // will store last time LED was updated
+unsigned long previousMillisK1 = 0;
+unsigned long previousMillisK2 = 0;
+unsigned long K2 = 0; // will store last time LED was updated
 unsigned long currentMillis = 0; // will store current time LED
 int estado = 0;
 int BUZZERSTATE = 0;
@@ -66,25 +68,33 @@ void loop() {
   dato_aceleracion = aceleracion();
   currentMillis = millis();
 
-  if(dato_aceleracion > 22){
+  if(dato_aceleracion < 3){
     kondizioa1 = true;
-    previousMillisA = currentMillis;
+    Serial.println("kondizioa1");
   }
-  else{
-    if(kondizioa1 == true && dato_aceleracion < 3){
-      kondizioa2 == true;
-      previousMillisA = currentMillis;
-    }
+  if(kondizioa1 == true && dato_aceleracion > 22){
+    previousMillisK1 = currentMillis;
+    kondizioa2 = true;
+    Serial.println("kondizioa2");
   }
-  
-  if(kondizioa2 == true && dato_aceleracion < 8 && dato_aceleracion > 12){
+  if(kondizioa2 == true && dato_aceleracion < 12 && dato_aceleracion > 8){
+    previousMillisK1 = currentMillis;
+    kondizioa3 = true;
+    Serial.println("kondizioa3");
+  }
+  if(kondizioa3 == true){
+    previousMillisK1 = currentMillis;
     estado = 2;
-  }
-
-  if(currentMillis - previousMillisA >= 2000){
     kondizioa1 = false;
     kondizioa2 = false;
-    previousMillisA = currentMillis;
+    kondizioa3 = false;
+  }
+  if(currentMillis - previousMillisK1 >= 2000){
+    kondizioa1 = false;
+    kondizioa2 = false;
+    kondizioa3 = false;
+    previousMillisK1 = currentMillis;
+    Serial.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
   }
 
   switch (estado){
@@ -97,28 +107,37 @@ void loop() {
     noTone(6); 
     datoGPS = GPS();
     dato_aceleracion = aceleracion();
+    currentMillis = millis();
     
-    if(dato_aceleracion > 22){
-      kondizioa1 = true;
-      previousMillisA = currentMillis;
-      Serial.println("1111111111111111111111111111111111111111111111111111111111");
+    if(dato_aceleracion < 3){
+    kondizioa1 = true;
+    Serial.println("kondizioa1");
+  }
+  if(kondizioa1 == true && dato_aceleracion > 22){
+    previousMillisK2 = currentMillis;
+    kondizioa2 = true;
+    Serial.println("kondizioa2");
+  }
+  if(kondizioa2 == true && dato_aceleracion < 12 && dato_aceleracion > 8){
+    previousMillisK2 = currentMillis;
+    kondizioa3 = true;
+    Serial.println("kondizioa3");
+  }
+  if(kondizioa3 == true){
+    previousMillisK2 = currentMillis;
+    estado = 2;
+    kondizioa1 = false;
+    kondizioa2 = false;
+    kondizioa3 = false;
+  }
+  if(currentMillis - previousMillisK2 >= 2000){
+    kondizioa1 = false;
+    kondizioa2 = false;
+    kondizioa3 = false;
+    previousMillisK2 = currentMillis;
+    Serial.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+  }
 
-    }
-    if(kondizioa1 == true && dato_aceleracion < 3){
-     kondizioa2 == true;
-      previousMillisA = currentMillis;
-      Serial.println("22222222222222222222222222222222222222222222222222222222222222");
-
-    }
-    if(kondizioa2 == true && dato_aceleracion < 8 && dato_aceleracion > 12){
-      estado = 2;
-    }
-
-    if(currentMillis - previousMillisA >= 2000){
-      kondizioa1 = false;
-      kondizioa2 = false;
-      previousMillisA = currentMillis;
-    }
   break;
 
   case 2:
@@ -196,8 +215,8 @@ float aceleracion(){
   Serial.print("c:");
   Serial.print(12);
   Serial.print(",");
-  Serial.print("0:");
-  Serial.print(0);
+  Serial.print("3:");
+  Serial.print(3);
   Serial.print(",");
   Serial.print("x:");
   Serial.print(x);
