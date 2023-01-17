@@ -112,6 +112,7 @@ void loop() {
       if(contador == 0){
         miBT.println(datoGPS);
         Serial.println(datoGPS);
+        Serial.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         contador++;
         i = 0;
       }
