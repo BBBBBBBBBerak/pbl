@@ -114,12 +114,13 @@ void loop() {
         Serial.println(datoGPS);
         Serial.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         contador++;
-        i = 0;
       }
     }
 
     if(miBT.available() > 0 || digitalRead(pulsador)== LOW){
     estado = 1;
+    i = 0;
+    contador = 0;
     }
   break;
   }
