@@ -20,7 +20,8 @@
 const int ledPin = 7;// the number of the LED pin
 const int pulsador = 8;//input pullup del pulsador
 int ledState = LOW; // ledState used to set the LED
-unsigned long previousMillis = 0; // will store last time LED was updated
+unsigned long previousMillis = 0;
+unsigned long previousMillisA = 0; // will store last time LED was updated
 unsigned long currentMillis = 0; // will store current time LED
 int estado = 0;
 int BUZZERSTATE = 0;
@@ -45,50 +46,60 @@ void setup() {
   miBT.begin(38400);		// comunicacion serie entre Arduino y el modulo a 38400 bps
   Serial1.begin(9600);  // GPS
 
-  Serial.println("Adafruit MMA8451 test!");
+  //Serial.println("Adafruit MMA8451 test!");
 
   if (! mma.begin()) {
-    Serial.println("Couldnt start");
+    //Serial.println("Couldnt start");
     while (1);
   }
-  Serial.println("MMA8451 found!");
+  //Serial.println("MMA8451 found!");
   mma.setRange(MMA8451_RANGE_2_G);
-  Serial.print("Range = "); Serial.print(2 << mma.getRange());  
-  Serial.println("G");
+  //Serial.print("Range = "); Serial.print(2 << mma.getRange());  
+  //Serial.println("G");
 }
 
 void loop() {  
   datoGPS = GPS();
   dato_aceleracion = aceleracion();
+  currentMillis = millis();
 
-  if(dato_aceleracion > 17){
+  if(dato_aceleracion > 22){
+    /*if(currentMillis - previousMillisA >= 2000){
+      if(dato_aceleracion > 8 && dato_aceleracion < 12){
+         estado = 2;
+      }
+    }*/
     estado = 2;
   }
+
   switch (estado){
   case 1:
-    Serial.println(i);
+    //Serial.println(i);
     i = 0;
     digitalWrite(ledPin, LOW);
-    Serial.println("Caso 1");
+    //Serial.println("Caso 1");
     estado_led = LOW;
     noTone(6); 
     datoGPS = GPS();
     dato_aceleracion = aceleracion();
     
-    if(dato_aceleracion > 17){
-      estado = 2;
-    }
-
+    if(dato_aceleracion > 22){
+    /*if(currentMillis - previousMillisA >= 2000){
+      if(dato_aceleracion > 8 && dato_aceleracion < 12){
+         estado = 2;
+      }
+    }*/
+        estado = 2;
+  }
   break;
 
   case 2:
-  Serial.println(i);
+  //Serial.println(i);
   GPS();
- // aceleracion();
-    //Serial.println("Caso 2");
-//    digitalWrite(ledPin, estado_led);
+  // aceleracion();
+  //Serial.println("Caso 2");
+  //    digitalWrite(ledPin, estado_led);
 
-    currentMillis = millis(); //take the current time
     if (currentMillis - previousMillis >= 1000) { // save the last time you blinked the BUZZER
     
     // if the BUZZER is off turn it on and vice-versa:
@@ -96,7 +107,7 @@ void loop() {
       BUZZERSTATE = HIGH;
       digitalWrite(ledPin, HIGH);
       estado_led = !estado_led;
-      tone(6, 4000);
+      tone(6, 3000);
         i++;
       } 
       
@@ -111,18 +122,18 @@ void loop() {
     if (i == 10){
       if(contador == 0){
         miBT.println(datoGPS);
-        Serial.println(datoGPS);
-        Serial.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        //Serial.println(datoGPS);
+        //Serial.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         contador++;
       }
     }
 
-    if(miBT.available() > 0 || digitalRead(pulsador)== LOW){
+    if(miBT.available() > 0 || digitalRead(8) == LOW){
     estado = 1;
     i = 0;
     contador = 0;
     }
-  break;
+    break;
   }
 }
 
@@ -145,5 +156,16 @@ float aceleracion(){
   float y=event.acceleration.y;
   float z=event.acceleration.z;
   float mod=sqrt(pow(x,2)+pow(y,2)+pow(z,2));
+  Serial.print("z:");
+  Serial.print(z);
+  Serial.print(",");
+  Serial.print("a:");
+  Serial.print(25);
+  Serial.print(",");
+  Serial.print("x:");
+  Serial.print(x);
+  Serial.print(",");
+  Serial.print("Mod:");
+  Serial.println(mod);
   return mod;
 }
