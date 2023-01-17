@@ -110,7 +110,8 @@ void loop() {
 
     if (i == 10){
       if(contador == 0){
-        miBT.print(datoGPS);
+        miBT.println(datoGPS);
+        Serial.println(datoGPS);
         contador++;
       }
     }
