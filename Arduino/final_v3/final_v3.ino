@@ -101,8 +101,6 @@ void loop() {
     //Serial.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
   }
 
-
-
   if(currentMillis - previousMillisE >= 5000 && digitalRead(8) == LOW){
     if(contadorE == 0){
       previousMillisE = currentMillis;
@@ -136,9 +134,9 @@ void loop() {
         //Serial.println("kondizioa2");
       }
       if(kondizioa2 == true && dato_aceleracion < 12 && dato_aceleracion > 8){
-      previousMillisK2 = currentMillis;
-      kondizioa3 = true;
-      //Serial.println("kondizioa3");
+        previousMillisK2 = currentMillis;
+        kondizioa3 = true;
+        //Serial.println("kondizioa3");
       }
       if(kondizioa3 == true){
         previousMillisK2 = currentMillis;
@@ -156,16 +154,15 @@ void loop() {
       }
 
       if(currentMillis - previousMillisE >= 5000 && digitalRead(8) == LOW){
-    if(contadorE == 0){
-      previousMillisE = currentMillis;
-      contadorE++;
-    }
-    else{
-      estado = 3;
-      //previousMillisE = currentMillis;
-    }
-  }
-
+        if(contadorE == 0){
+          previousMillisE = currentMillis;
+          contadorE++;
+        }
+        else{
+          estado = 3;
+          //previousMillisE = currentMillis;
+        }
+      }
     break;
 
     case 2:
@@ -209,49 +206,46 @@ void loop() {
     break;
 
     case 3:
-    if(j <= 75){
+      if(j <= 75){
         if (currentMillis - previousMillis >= 50) {
-        if (BUZZERSTATE == LOW) {
-          BUZZERSTATE = HIGH;
-          digitalWrite(ledPin, HIGH);
-          estado_led = !estado_led;
-          tone(6, 4000);
-          j++;
-        } 
-        else {
-          BUZZERSTATE = LOW;
-          noTone(6);
-          digitalWrite(ledPin, LOW);
-          j++;
+          if (BUZZERSTATE == LOW) {
+            BUZZERSTATE = HIGH;
+            digitalWrite(ledPin, HIGH);
+            estado_led = !estado_led;
+            tone(6, 4000);
+            j++;
+          } 
+          else {
+            BUZZERSTATE = LOW;
+            noTone(6);
+            digitalWrite(ledPin, LOW);
+            j++;
+          }
+          previousMillis = currentMillis;
         }
-        previousMillis = currentMillis;
+
       }
-
-    }
-    else{
-      miBT.println(datoGPS);
-      estado = 1;
-      Serial.println(" EMERGENCIA ");
-      contadorE = 0;
-      j = 0;
-    }
-    
-      
-
+      else{
+        miBT.println(datoGPS);
+        estado = 1;
+        Serial.println(" EMERGENCIA ");
+        contadorE = 0;
+        j = 0;
+      }
     break;
   }
 }
 
 String GPS(){ 
-    float flat, flon;   //Variables de latitud y longitud
-    unsigned long age;
-    gps.f_get_position(&flat, &flon, &age);
-    //Guardamos en el String todos los dato_gps
-    dato_gps=(
-    String(flat == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flat, 6) + String(" ,  ") + //Latitud
-    String(flon == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flon, 6) +  String(" ,  ")); //Longitud
-         
- return dato_gps;
+  float flat, flon;   //Variables de latitud y longitud
+  unsigned long age;
+  gps.f_get_position(&flat, &flon, &age);
+  //Guardamos en el String todos los dato_gps
+  dato_gps=(
+  String(flat == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flat, 6) + String(" ,  ") + //Latitud
+  String(flon == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flon, 6) +  String(" ,  ")); //Longitud
+
+  return dato_gps;
 }
 
 float aceleracion(){
