@@ -107,7 +107,7 @@ void loop() {
       BUZZERSTATE = HIGH;
       digitalWrite(ledPin, HIGH);
       estado_led = !estado_led;
-      tone(6, 3000);
+      tone(6, 4000);
         i++;
       } 
       
