@@ -27,6 +27,9 @@ int estado = 0;
 int BUZZERSTATE = 0;
 int contador = 0;
 
+bool kondizioa1 = false;
+bool kondizioa2 = false;
+bool kondizioa3 = false;
 
 Adafruit_MMA8451 mma = Adafruit_MMA8451();
 
@@ -64,15 +67,24 @@ void loop() {
   currentMillis = millis();
 
   if(dato_aceleracion > 22){
-    //if(currentMillis - previousMillisA >= 2000){
-      delay(2000);
-      if((dato_aceleracion > 8) && (dato_aceleracion < 15)){
-        Serial.print("estado2");
-         estado = 2;
-         previousMillisA = currentMillis;
-      }
-    //}
-    //estado = 2;
+    kondizioa1 = true;
+    previousMillisA = currentMillis;
+  }
+  else{
+    if(kondizioa1 == true && dato_aceleracion < 3){
+      kondizioa2 == true;
+      previousMillisA = currentMillis;
+    }
+  }
+  
+  if(kondizioa2 == true && dato_aceleracion < 8 && dato_aceleracion > 12){
+    estado = 2;
+  }
+
+  if(currentMillis - previousMillisA >= 2000){
+    kondizioa1 = false;
+    kondizioa2 = false;
+    previousMillisA = currentMillis;
   }
 
   switch (estado){
@@ -87,17 +99,26 @@ void loop() {
     dato_aceleracion = aceleracion();
     
     if(dato_aceleracion > 22){
-    //if(currentMillis - previousMillisA >= 2000){
+      kondizioa1 = true;
+      previousMillisA = currentMillis;
+      Serial.println("1111111111111111111111111111111111111111111111111111111111");
 
-      delay(2000);
-      if((dato_aceleracion > 8) && (dato_aceleracion < 15)){
-        Serial.print("estado2");
-         estado = 2;
-         previousMillisA = currentMillis;
-      //}
     }
-        //estado = 2;
-  }
+    if(kondizioa1 == true && dato_aceleracion < 3){
+     kondizioa2 == true;
+      previousMillisA = currentMillis;
+      Serial.println("22222222222222222222222222222222222222222222222222222222222222");
+
+    }
+    if(kondizioa2 == true && dato_aceleracion < 8 && dato_aceleracion > 12){
+      estado = 2;
+    }
+
+    if(currentMillis - previousMillisA >= 2000){
+      kondizioa1 = false;
+      kondizioa2 = false;
+      previousMillisA = currentMillis;
+    }
   break;
 
   case 2:
@@ -173,7 +194,10 @@ float aceleracion(){
   Serial.print(8);
   Serial.print(",");
   Serial.print("c:");
-  Serial.print(15);
+  Serial.print(12);
+  Serial.print(",");
+  Serial.print("0:");
+  Serial.print(0);
   Serial.print(",");
   Serial.print("x:");
   Serial.print(x);
