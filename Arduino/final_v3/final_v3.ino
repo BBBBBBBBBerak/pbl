@@ -22,6 +22,8 @@ const int pulsador = 8;//input pullup del pulsador
 int ledState = LOW; // ledState used to set the LED
 unsigned long previousMillis = 0;
 unsigned long previousMillisE = 0;
+unsigned long previousMillisW = 0;
+unsigned long previousMillisw = 0;
 unsigned long previousMillisK1 = 0;
 unsigned long previousMillisK2 = 0;
 unsigned long K2 = 0; // will store last time LED was updated
@@ -30,10 +32,13 @@ int estado = 0;
 int BUZZERSTATE = 0;
 int contador = 0;
 int contadorE = 0;
+int contadorW = 0;
+int contadorw = 0;
 
 bool kondizioa1 = false;
 bool kondizioa2 = false;
 bool kondizioa3 = false;
+bool kondizioa4 = false;
 
 Adafruit_MMA8451 mma = Adafruit_MMA8451();
 
@@ -47,6 +52,8 @@ float dato_aceleracion = 9.8;
 int estado_led = LOW;
 int i = 0;
 int j = 0;
+int e = 0;
+int w = 0;
 
 void setup() {
   pinMode(ledPin, OUTPUT);
@@ -76,7 +83,7 @@ void loop() {
     kondizioa1 = true;
     //Serial.println("kondizioa1");
   }
-  if(kondizioa1 == true && dato_aceleracion > 22){
+  if(kondizioa1 == true && dato_aceleracion > 20){
     previousMillisK1 = currentMillis;
     kondizioa2 = true;
     //Serial.println("kondizioa2");
@@ -87,29 +94,64 @@ void loop() {
     //Serial.println("kondizioa3");
   }
   if(kondizioa3 == true){
+    if(currentMillis - previousMillisw >= 1500){
+      if(contadorw == 0){
+        previousMillisw = currentMillis;
+        contadorw++;
+      }
+      if(currentMillis - previousMillisW >= 100){
+        if(contadorW == 0){
+          previousMillisW = currentMillis;
+          contadorW++;
+        }
+        if(dato_aceleracion < 10.8 && dato_aceleracion > 9.2){
+          w++;
+        }
+        else{
+          w = 0;
+          kondizioa1 = false;
+          kondizioa2 = false;
+          kondizioa3 = false;
+          kondizioa4 = false;
+        }
+      }
+      if(w >= 50){
+        previousMillisK1 = currentMillis;
+        kondizioa4 = true;
+      }
+    }
+  }
+  if(kondizioa4 == true){
     previousMillisK1 = currentMillis;
     estado = 2;
     kondizioa1 = false;
     kondizioa2 = false;
     kondizioa3 = false;
+    kondizioa4 = false;
   }
-  if(currentMillis - previousMillisK1 >= 2000){
+  if(currentMillis - previousMillisK1 >= 6000){
     kondizioa1 = false;
     kondizioa2 = false;
     kondizioa3 = false;
+    kondizioa4 = false;
     previousMillisK1 = currentMillis;
     //Serial.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
   }
 
-  if(currentMillis - previousMillisE >= 5000 && digitalRead(8) == LOW){
+  if(currentMillis - previousMillisE >= 200 && digitalRead(8) == LOW){
     if(contadorE == 0){
       previousMillisE = currentMillis;
       contadorE++;
     }
     else{
-      estado = 3;
-      //previousMillisE = currentMillis;
+      e++;
     }
+    if(e >= 100){
+      estado = 3;
+    }
+  }
+  else{
+    e = 0;
   }
 
   switch (estado){
@@ -128,7 +170,7 @@ void loop() {
         kondizioa1 = true;
         //Serial.println("kondizioa1");
       }
-      if(kondizioa1 == true && dato_aceleracion > 22){
+      if(kondizioa1 == true && dato_aceleracion > 20){
         previousMillisK2 = currentMillis;
         kondizioa2 = true;
         //Serial.println("kondizioa2");
@@ -139,29 +181,64 @@ void loop() {
         //Serial.println("kondizioa3");
       }
       if(kondizioa3 == true){
+        if(currentMillis - previousMillisw >= 1500){
+          if(contadorw == 0){
+            previousMillisw = currentMillis;
+            contadorw++;
+          }
+          if(currentMillis - previousMillisW >= 100){
+            if(contadorW == 0){
+              previousMillisW = currentMillis;
+              contadorW++;
+            }
+          if(dato_aceleracion < 10.8 && dato_aceleracion > 9.2){
+            w++;
+          }
+          else{
+            w = 0;
+            kondizioa1 = false;
+            kondizioa2 = false;
+            kondizioa3 = false;
+            kondizioa4 = false;
+          }
+        }
+      if(w >= 50){
+        previousMillisK1 = currentMillis;
+        kondizioa4 = true;
+      }
+    }
+  }
+      if(kondizioa4 == true){
         previousMillisK2 = currentMillis;
         estado = 2;
         kondizioa1 = false;
         kondizioa2 = false;
         kondizioa3 = false;
+        kondizioa4 = false;
       }
-      if(currentMillis - previousMillisK2 >= 2000){
+      if(currentMillis - previousMillisK2 >= 6000){
         kondizioa1 = false;
         kondizioa2 = false;
         kondizioa3 = false;
+        kondizioa4 = false;
         previousMillisK2 = currentMillis;
         //Serial.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
       }
 
-      if(currentMillis - previousMillisE >= 5000 && digitalRead(8) == LOW){
+      if(currentMillis - previousMillisE >= 200 && digitalRead(8) == LOW){
         if(contadorE == 0){
           previousMillisE = currentMillis;
           contadorE++;
         }
         else{
-          estado = 3;
-          //previousMillisE = currentMillis;
+          e++;
         }
+        if(e >= 100){
+          estado = 3;
+        }
+      }
+      else{
+        e = 0;
       }
     break;
 
@@ -202,6 +279,9 @@ void loop() {
         estado = 1;
         i = 0;
         contador = 0;
+        w = 0;
+        contadorw = 0;
+        contadorW = 0;
       }
     break;
 
@@ -231,6 +311,7 @@ void loop() {
         Serial.println(" EMERGENCIA ");
         contadorE = 0;
         j = 0;
+        e = 0;
       }
     break;
   }
@@ -255,11 +336,17 @@ float aceleracion(){
   float y=event.acceleration.y;
   float z=event.acceleration.z;
   float mod=sqrt(pow(x,2)+pow(y,2)+pow(z,2));
-  Serial.print("22:");
-  Serial.print(22);
+  Serial.print("20:");
+  Serial.print(20);
   Serial.print(",");
   Serial.print("8:");
   Serial.print(8);
+  Serial.print(",");
+   Serial.print("11:");
+  Serial.print(10.8);
+  Serial.print(",");
+   Serial.print("9:");
+  Serial.print(9.2);
   Serial.print(",");
   Serial.print("12:");
   Serial.print(12);
