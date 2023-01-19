@@ -17,18 +17,18 @@
 #include <Adafruit_Sensor.h>
 
 
-const int ledPin = 7;// the number of the LED pin
-const int pulsador = 8;//input pullup del pulsador
-int ledState = LOW; // ledState used to set the LED
+const int ledPin = 7;
+const int pulsador = 8;
+int ledState = LOW;
 unsigned long previousMillis = 0;
 unsigned long previousMillisE = 0;
 unsigned long previousMillisW = 0;
 unsigned long previousMillisw = 0;
 unsigned long previousMillisK1 = 0;
 unsigned long previousMillisK2 = 0;
-unsigned long K2 = 0; // will store last time LED was updated
-unsigned long currentMillis = 0; // will store current time LED
-int estado = 0;
+unsigned long K2 = 0;
+unsigned long currentMillis = 0;
+int estado = 1;
 int BUZZERSTATE = 0;
 int contador = 0;
 int contadorE = 0;
@@ -62,138 +62,53 @@ void setup() {
   miBT.begin(38400);		// comunicacion serie entre Arduino y el modulo a 38400 bps
   Serial1.begin(9600);  // GPS
 
-  //Serial.println("Adafruit MMA8451 test!");
 
   if (! mma.begin()) {
-    //Serial.println("Couldnt start");
     while (1);
   }
-  //Serial.println("MMA8451 found!");
   mma.setRange(MMA8451_RANGE_2_G);
   //Serial.print("Range = "); Serial.print(2 << mma.getRange());  
-  //Serial.println("G");
+
+  estado = 1;
 }
 
 void loop() {  
-  datoGPS = GPS();
-  dato_aceleracion = aceleracion();
-  currentMillis = millis();
-
-  if(dato_aceleracion < 3){
-    kondizioa1 = true;
-    //Serial.println("kondizioa1");
-  }
-  if(kondizioa1 == true && dato_aceleracion > 20){
-    previousMillisK1 = currentMillis;
-    kondizioa2 = true;
-    //Serial.println("kondizioa2");
-  }
-  if(kondizioa2 == true && dato_aceleracion < 12 && dato_aceleracion > 8){
-    previousMillisK1 = currentMillis;
-    kondizioa3 = true;
-    //Serial.println("kondizioa3");
-  }
-  if(kondizioa3 == true){
-    if(contadorw == 0){
-        previousMillisw = currentMillis;
-        contadorw++;
-      }
-    if(currentMillis - previousMillisw >= 1500){
-      if(contadorW == 0){
-          previousMillisW = currentMillis;
-          contadorW++;
-        }
-      if(currentMillis - previousMillisW >= 100){
-        if(dato_aceleracion < 10.8 && dato_aceleracion > 9.2){
-          w++;
-        }
-        else{
-          w = 0;
-          kondizioa1 = false;
-          kondizioa2 = false;
-          kondizioa3 = false;
-          kondizioa4 = false;
-        }
-      }
-      if(w >= 50){
-        previousMillisK1 = currentMillis;
-        kondizioa4 = true;
-      }
-    }
-  }
-  if(kondizioa4 == true){
-    previousMillisK1 = currentMillis;
-    estado = 2;
-    kondizioa1 = false;
-    kondizioa2 = false;
-    kondizioa3 = false;
-    kondizioa4 = false;
-  }
-  if(currentMillis - previousMillisK1 >= 6000){
-    kondizioa1 = false;
-    kondizioa2 = false;
-    kondizioa3 = false;
-    kondizioa4 = false;
-    previousMillisK1 = currentMillis;
-    //Serial.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-  }
-
-  if(currentMillis - previousMillisE >= 200 && digitalRead(8) == LOW){
-    if(contadorE == 0){
-      previousMillisE = currentMillis;
-      contadorE++;
-    }
-    else{
-      e++;
-    }
-    if(e >= 100){
-      estado = 3;
-    }
-  }
-  else{
-    e = 0;
-  }
-
   switch (estado){
     case 1:
-      //Serial.println(i);
-      i = 0;
-      digitalWrite(ledPin, LOW);
-      //Serial.println("Caso 1");
-      estado_led = LOW;
-      noTone(6); 
       datoGPS = GPS();
       dato_aceleracion = aceleracion();
       currentMillis = millis();
+      
+      i = 0;
+      digitalWrite(ledPin, LOW);
+      estado_led = LOW;
+      noTone(6); 
     
       if(dato_aceleracion < 3){
         kondizioa1 = true;
-        //Serial.println("kondizioa1");
       }
       if(kondizioa1 == true && dato_aceleracion > 20){
         previousMillisK2 = currentMillis;
         kondizioa2 = true;
-        //Serial.println("kondizioa2");
       }
       if(kondizioa2 == true && dato_aceleracion < 12 && dato_aceleracion > 8){
         previousMillisK2 = currentMillis;
         kondizioa3 = true;
-        //Serial.println("kondizioa3");
       }
       if(kondizioa3 == true){
-    if(contadorw == 0){
-        previousMillisw = currentMillis;
-        contadorw++;
-      }
-    if(currentMillis - previousMillisw >= 1500){
-      if(contadorW == 0){
-          previousMillisW = currentMillis;
-          contadorW++;
+        if(contadorw == 0){
+          previousMillisw = currentMillis;
+          contadorw++;
         }
-      if(currentMillis - previousMillisW >= 100){
-        if(dato_aceleracion < 10.8 && dato_aceleracion > 9.2){
-          w++;
-        }
+        if(currentMillis - previousMillisw >= 1500){
+          if(contadorW == 0){
+            previousMillisW = currentMillis;
+            contadorW++;
+          }
+        if(currentMillis - previousMillisW >= 100){
+          if(dato_aceleracion < 10.8 && dato_aceleracion > 9.2){
+            w++;
+          }
         else{
           w = 0;
           kondizioa1 = false;
@@ -222,7 +137,6 @@ void loop() {
         kondizioa3 = false;
         kondizioa4 = false;
         previousMillisK2 = currentMillis;
-        //Serial.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
       }
 
       if(currentMillis - previousMillisE >= 200 && digitalRead(8) == LOW){
@@ -243,14 +157,11 @@ void loop() {
     break;
 
     case 2:
-      //Serial.println(i);
-      GPS();
-      // aceleracion();
-      //Serial.println("Caso 2");
-      //    digitalWrite(ledPin, estado_led);
-
-      if (currentMillis - previousMillis >= 1000) { // save the last time you blinked the BUZZER
-        // if the BUZZER is off turn it on and vice-versa:
+      datoGPS = GPS();
+      dato_aceleracion = aceleracion();
+      currentMillis = millis();
+      
+      if (currentMillis - previousMillis >= 1000) {
         if (BUZZERSTATE == LOW) {
           BUZZERSTATE = HIGH;
           digitalWrite(ledPin, HIGH);
@@ -269,8 +180,6 @@ void loop() {
       if (i == 10){
         if(contador == 0){
           miBT.println(datoGPS);
-          //Serial.println(datoGPS);
-          //Serial.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
           contador++;
         }
       }
@@ -286,6 +195,10 @@ void loop() {
     break;
 
     case 3:
+      datoGPS = GPS();
+      dato_aceleracion = aceleracion();
+      currentMillis = millis();
+
       if(j <= 75){
         if (currentMillis - previousMillis >= 50) {
           if (BUZZERSTATE == LOW) {
@@ -318,10 +231,10 @@ void loop() {
 }
 
 String GPS(){ 
-  float flat, flon;   //Variables de latitud y longitud
+  float flat, flon;
   unsigned long age;
   gps.f_get_position(&flat, &flon, &age);
-  //Guardamos en el String todos los dato_gps
+
   dato_gps=(
   String(flat == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flat, 6) + String(" ,  ") + //Latitud
   String(flon == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flon, 6) +  String(" ,  ")); //Longitud
@@ -342,10 +255,10 @@ float aceleracion(){
   Serial.print("8:");
   Serial.print(8);
   Serial.print(",");
-   Serial.print("11:");
+  Serial.print("10.8:");
   Serial.print(10.8);
   Serial.print(",");
-   Serial.print("9:");
+  Serial.print("9.2:");
   Serial.print(9.2);
   Serial.print(",");
   Serial.print("12:");
