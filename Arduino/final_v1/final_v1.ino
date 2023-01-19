@@ -64,12 +64,15 @@ void loop() {
   currentMillis = millis();
 
   if(dato_aceleracion > 22){
-    /*if(currentMillis - previousMillisA >= 2000){
-      if(dato_aceleracion > 8 && dato_aceleracion < 12){
+    //if(currentMillis - previousMillisA >= 2000){
+      delay(2000);
+      if((dato_aceleracion > 8) && (dato_aceleracion < 15)){
+        Serial.print("estado2");
          estado = 2;
+         previousMillisA = currentMillis;
       }
-    }*/
-    estado = 2;
+    //}
+    //estado = 2;
   }
 
   switch (estado){
@@ -84,12 +87,16 @@ void loop() {
     dato_aceleracion = aceleracion();
     
     if(dato_aceleracion > 22){
-    /*if(currentMillis - previousMillisA >= 2000){
-      if(dato_aceleracion > 8 && dato_aceleracion < 12){
+    //if(currentMillis - previousMillisA >= 2000){
+
+      delay(2000);
+      if((dato_aceleracion > 8) && (dato_aceleracion < 15)){
+        Serial.print("estado2");
          estado = 2;
-      }
-    }*/
-        estado = 2;
+         previousMillisA = currentMillis;
+      //}
+    }
+        //estado = 2;
   }
   break;
 
@@ -160,7 +167,13 @@ float aceleracion(){
   Serial.print(z);
   Serial.print(",");
   Serial.print("a:");
-  Serial.print(25);
+  Serial.print(22);
+  Serial.print(",");
+  Serial.print("b:");
+  Serial.print(8);
+  Serial.print(",");
+  Serial.print("c:");
+  Serial.print(15);
   Serial.print(",");
   Serial.print("x:");
   Serial.print(x);
