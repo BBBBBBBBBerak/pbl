@@ -94,16 +94,16 @@ void loop() {
     //Serial.println("kondizioa3");
   }
   if(kondizioa3 == true){
-    if(currentMillis - previousMillisw >= 1500){
-      if(contadorw == 0){
+    if(contadorw == 0){
         previousMillisw = currentMillis;
         contadorw++;
       }
-      if(currentMillis - previousMillisW >= 100){
-        if(contadorW == 0){
+    if(currentMillis - previousMillisw >= 1500){
+      if(contadorW == 0){
           previousMillisW = currentMillis;
           contadorW++;
         }
+      if(currentMillis - previousMillisW >= 100){
         if(dato_aceleracion < 10.8 && dato_aceleracion > 9.2){
           w++;
         }
@@ -181,27 +181,27 @@ void loop() {
         //Serial.println("kondizioa3");
       }
       if(kondizioa3 == true){
-        if(currentMillis - previousMillisw >= 1500){
-          if(contadorw == 0){
-            previousMillisw = currentMillis;
-            contadorw++;
-          }
-          if(currentMillis - previousMillisW >= 100){
-            if(contadorW == 0){
-              previousMillisW = currentMillis;
-              contadorW++;
-            }
-          if(dato_aceleracion < 10.8 && dato_aceleracion > 9.2){
-            w++;
-          }
-          else{
-            w = 0;
-            kondizioa1 = false;
-            kondizioa2 = false;
-            kondizioa3 = false;
-            kondizioa4 = false;
-          }
+    if(contadorw == 0){
+        previousMillisw = currentMillis;
+        contadorw++;
+      }
+    if(currentMillis - previousMillisw >= 1500){
+      if(contadorW == 0){
+          previousMillisW = currentMillis;
+          contadorW++;
         }
+      if(currentMillis - previousMillisW >= 100){
+        if(dato_aceleracion < 10.8 && dato_aceleracion > 9.2){
+          w++;
+        }
+        else{
+          w = 0;
+          kondizioa1 = false;
+          kondizioa2 = false;
+          kondizioa3 = false;
+          kondizioa4 = false;
+        }
+      }
       if(w >= 50){
         previousMillisK1 = currentMillis;
         kondizioa4 = true;
