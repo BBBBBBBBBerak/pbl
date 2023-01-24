@@ -84,7 +84,7 @@ void loop() {
       estado_led = LOW;
       noTone(6); 
     
-      if(dato_aceleracion < 3){
+      if(dato_aceleracion < 6){
         kondizioa1 = true;
       }
       if(kondizioa1 == true && dato_aceleracion > 20){
@@ -181,6 +181,7 @@ void loop() {
         if(contador == 0){
           miBT.println(datoGPS);
           contador++;
+          Serial.println("EMERGENCIA");
         }
       }
 
@@ -252,20 +253,14 @@ float aceleracion(){
   Serial.print("20:");
   Serial.print(20);
   Serial.print(",");
-  Serial.print("8:");
-  Serial.print(8);
-  Serial.print(",");
   Serial.print("10.8:");
   Serial.print(10.8);
   Serial.print(",");
   Serial.print("9.2:");
   Serial.print(9.2);
   Serial.print(",");
-  Serial.print("12:");
-  Serial.print(12);
-  Serial.print(",");
   Serial.print("3:");
-  Serial.print(3);
+  Serial.print(6);
   Serial.print(",");
   Serial.print("Mod:");
   Serial.println(mod);
