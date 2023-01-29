@@ -16,6 +16,12 @@
 #include <Adafruit_MMA8451.h>
 #include <Adafruit_Sensor.h>
 
+const int redPin = 5;
+const int greenPin = A2;
+const int bluePin = 9;
+
+long int fade_goTime;
+int fade_break = 100;
 
 const int ledPin = 7;
 const int pulsador = 8;
@@ -70,9 +76,12 @@ void setup() {
   //Serial.print("Range = "); Serial.print(2 << mma.getRange());  
 
   estado = 1;
+
+  fade_goTime = millis(); 
 }
 
 void loop() {  
+  if(  millis() >= fade_goTime) fade();
   switch (estado){
     case 1:
       datoGPS = GPS();
@@ -182,6 +191,7 @@ void loop() {
           miBT.println(datoGPS);
           contador++;
           Serial.println("EMERGENCIA");
+          estado = 1;
         }
       }
 
@@ -266,3 +276,35 @@ float aceleracion(){
   Serial.println(mod);
   return mod;
 }
+
+void fade()
+{
+ 
+  static unsigned int rgbColour[3] = {255,0,0}; //Start on red
+  static int incColour = 1;
+  static int decColour = 0;
+  static int i = -1;
+      
+      // cross-fade the two colours.
+      i++;
+      if(i > 254) {
+        i=0;
+        decColour ++;
+        if(decColour >2) decColour = 0;      
+        if (decColour == 2)  incColour = 0;
+        else incColour = decColour +1;
+      }
+
+       
+        rgbColour[decColour] -= 1;
+        rgbColour[incColour] += 1;
+       
+        setColourRgb(rgbColour[0], rgbColour[1], rgbColour[2]);      
+       fade_goTime = millis() + fade_break;       
+   }
+
+void setColourRgb(unsigned int red, unsigned int green, unsigned int blue) {
+  analogWrite(redPin, red);
+  analogWrite(greenPin, green);
+  analogWrite(bluePin, blue);
+ }
